@@ -19,14 +19,35 @@ function M.update_virtual_text()
   for i, line in ipairs(lines) do
     local import_path = patterns.extract_import_path(line)
     if import_path then
-      local file_path = resolver.resolve_file_path(import_path, current_dir)
-      local line_count = resolver.count_lines(file_path)
+      local info = resolver.get_import_info(import_path, current_dir)
       
-      if line_count > 0 then
-        local hl_group = highlights.get_highlight_group(line_count)
+      if info.size > 0 or info.lines > 0 then
+        local virt_text_parts = {}
+        
+        if info.size > 0 then
+          if info.lines > 0 then
+            -- Local file: (size, lines)
+            table.insert(virt_text_parts, {' (', 'ImportSize'})
+            table.insert(virt_text_parts, {resolver.format_file_size(info.size), 'ImportSize'})
+            table.insert(virt_text_parts, {', ', 'ImportSize'})
+            table.insert(virt_text_parts, {info.lines .. ' lines', highlights.get_highlight_group(info.lines)})
+            table.insert(virt_text_parts, {')', 'ImportSize'})
+          else
+            -- npm package: (size)
+            table.insert(virt_text_parts, {' (', 'ImportSize'})
+            table.insert(virt_text_parts, {resolver.format_file_size(info.size), 'ImportSize'})
+            table.insert(virt_text_parts, {')', 'ImportSize'})
+          end
+        elseif info.lines > 0 then
+          -- Only line count: (lines)
+          local hl_group = highlights.get_highlight_group(info.lines)
+          table.insert(virt_text_parts, {' (', hl_group})
+          table.insert(virt_text_parts, {info.lines .. ' lines', hl_group})
+          table.insert(virt_text_parts, {')', hl_group})
+        end
         
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, i - 1, 0, {
-          virt_text = {{ ' (' .. line_count .. ' lines)', hl_group }},
+          virt_text = virt_text_parts,
           virt_text_pos = 'eol',
         })
       end

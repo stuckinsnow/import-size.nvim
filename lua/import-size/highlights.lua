@@ -15,7 +15,7 @@ end
 
 function M.setup_highlights()
   -- Only set defaults if the highlight groups don't already exist
-  local existing_groups = {'ImportSize100', 'ImportSize200', 'ImportSize400', 'ImportSize500'}
+  local existing_groups = {'ImportSize100', 'ImportSize200', 'ImportSize400', 'ImportSize500', 'ImportSize'}
   for _, group in ipairs(existing_groups) do
     local hl = vim.api.nvim_get_hl(0, { name = group })
     if vim.tbl_isempty(hl) then
@@ -28,6 +28,8 @@ function M.setup_highlights()
         vim.api.nvim_set_hl(0, group, { fg = '#f97316', italic = true })
       elseif group == 'ImportSize500' then
         vim.api.nvim_set_hl(0, group, { fg = '#ef4444', italic = true })
+      elseif group == 'ImportSize' then
+        vim.api.nvim_set_hl(0, group, { fg = '#6b7280', italic = true })
       end
     end
   end
