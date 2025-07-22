@@ -2,6 +2,8 @@
 
 A filetype-agnostic Neovim plugin that shows line counts for imported local files with color-coded highlighting. Similar to import-cost but shows line counts instead of bundle sizes.
 
+<img width="1562" height="156" alt="2025-07-22_13-45" src="https://github.com/user-attachments/assets/64dc47c5-5b6c-4d6c-807d-eac0f042baa6" />
+
 ## Features
 
 - **Local files only**: Shows line counts only for relative imports (starting with `./` or `../`), not external libraries
