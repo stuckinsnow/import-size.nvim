@@ -2,7 +2,7 @@
 
 A filetype-agnostic Neovim plugin that displays file sizes and line counts for imported files with color-coded highlighting. Shows bundle sizes for npm packages and both file size + line counts for local files.
 
-<img width="2628" height="1640" alt="2025-07-22_15-41" src="https://github.com/user-attachments/assets/e8e3c161-586b-48b5-b5f1-1e4893d51c3a" />
+<img width="2627" height="1633" alt="2025-07-22_15-44" src="https://github.com/user-attachments/assets/ade22389-d866-45ab-bd99-f735da7b3996" />
 
 ## Features
 
