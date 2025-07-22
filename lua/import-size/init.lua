@@ -9,6 +9,19 @@ function M.setup(opts)
   
   highlights.setup_highlights()
   
+  -- Create user commands
+  vim.api.nvim_create_user_command('ImportSizeToggle', function()
+    M.toggle()
+  end, {})
+  
+  vim.api.nvim_create_user_command('ImportSizeShow', function()
+    M.show()
+  end, {})
+  
+  vim.api.nvim_create_user_command('ImportSizeHide', function()
+    M.hide()
+  end, {})
+  
   -- Auto-update on buffer events
   vim.api.nvim_create_autocmd({'BufReadPost', 'BufWritePost', 'BufWritePre', 'TextChanged', 'TextChangedI', 'InsertLeave'}, {
     callback = function()
