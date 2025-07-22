@@ -2,13 +2,41 @@
 local M = {}
 
 function M.is_local_file(import_path)
-  return string.sub(import_path, 1, 1) == '.' or string.sub(import_path, 1, 1) == '/'
+  return string.sub(import_path, 1, 1) == '.' or string.sub(import_path, 1, 1) == '/' or string.sub(import_path, 1, 1) == '@'
+end
+
+function M.resolve_path_alias(import_path, current_dir)
+  if string.sub(import_path, 1, 2) == '@/' then
+    -- Look for project root (containing package.json, tsconfig.json, etc.)
+    local root_markers = {'package.json', 'tsconfig.json', 'jsconfig.json', '.git'}
+    local project_root = current_dir
+    
+    -- Walk up directory tree to find project root
+    while project_root ~= '/' do
+      for _, marker in ipairs(root_markers) do
+        if vim.fn.filereadable(project_root .. '/' .. marker) == 1 or 
+           vim.fn.isdirectory(project_root .. '/' .. marker) == 1 then
+          -- Found project root, replace @ with project root
+          return project_root .. '/' .. string.sub(import_path, 3)
+        end
+      end
+      project_root = vim.fn.fnamemodify(project_root, ':h')
+    end
+    
+    -- Fallback: assume @ maps to src directory
+    return current_dir .. '/src/' .. string.sub(import_path, 3)
+  end
+  
+  return import_path
 end
 
 function M.resolve_file_path(import_path, current_dir)
   if not M.is_local_file(import_path) then
     return nil
   end
+  
+  -- Handle path aliases
+  import_path = M.resolve_path_alias(import_path, current_dir)
   
   local base_path
   if string.sub(import_path, 1, 1) == '.' then
