@@ -40,10 +40,11 @@ function M.setup(opts)
 				local buf = vim.api.nvim_win_get_buf(win)
 				vim.schedule(function()
 					if vim.api.nvim_buf_is_valid(buf) then
-						local current_buf = vim.api.nvim_get_current_buf()
-						vim.api.nvim_set_current_buf(buf)
-						display.update_virtual_text()
-						vim.api.nvim_set_current_buf(current_buf)
+						-- Use nvim_buf_call to update the buffer without switching current buffer
+						-- This avoids issues with winfixbuf
+						vim.api.nvim_buf_call(buf, function()
+							display.update_virtual_text(buf)
+						end)
 					end
 				end)
 			end

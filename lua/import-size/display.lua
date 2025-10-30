@@ -7,8 +7,8 @@ local M = {}
 
 local ns_id = vim.api.nvim_create_namespace("import_size")
 
-function M.update_virtual_text()
-	local bufnr = vim.api.nvim_get_current_buf()
+function M.update_virtual_text(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local current_file = vim.api.nvim_buf_get_name(bufnr)
 	local current_dir = vim.fn.fnamemodify(current_file, ":h")
